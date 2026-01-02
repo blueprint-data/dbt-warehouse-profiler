@@ -1,4 +1,4 @@
-# warehouse-profiler
+# dbt-warehouse-profiler
 
 A dbt package for profiling and documenting data warehouse datasets. This package provides macros to explore your data warehouse, validate source documentation, and understand table structures.
 
