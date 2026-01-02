@@ -1,0 +1,28 @@
+name: 'warehouse_profiler'
+
+version: '1.0.0'
+
+config-version: 2
+
+# Support dbt 1.x versions (allow minor and patch updates)
+require-dbt-version: [">=1.0.0", "<2.0.0"]
+
+profile: 'warehouse_profiler'
+
+# Variables for customization
+vars:
+  warehouse_profiler:
+    bigquery:
+      # Default BigQuery region for cross-dataset queries
+      default_region: 'us'
+
+      # Schemas to exclude from validation by default
+      exclude_schemas: []
+
+      # Maximum number of preview rows to show in profile_table
+      max_preview_rows: 10
+
+# Dispatch configuration for cross-database compatibility
+dispatch:
+  - macro_namespace: warehouse_profiler
+    search_order: ['warehouse_profiler', 'dbt']
