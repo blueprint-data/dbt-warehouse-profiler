@@ -31,7 +31,7 @@ Add the following to your `dbt_project.yml` to configure the package:
 
 ```yaml
 vars:
-  warehouse_profiler:
+  dbt_warehouse_profiler:
     bigquery:
       default_region: 'us'
       max_preview_rows: 10
@@ -52,12 +52,12 @@ List all schemas (datasets) in your BigQuery project.
 
 **Usage:**
 ```bash
-dbt run-operation warehouse_profiler.list_schemas
+dbt run-operation dbt_warehouse_profiler.list_schemas
 ```
 
 **With exclusions:**
 ```bash
-dbt run-operation warehouse_profiler.list_schemas --args '{exclude_schemas: ["temp_schema", "test_schema"]}'
+dbt run-operation dbt_warehouse_profiler.list_schemas --args '{exclude_schemas: ["temp_schema", "test_schema"]}'
 ```
 
 **Parameters:**
@@ -71,7 +71,7 @@ List all tables and views in a specific schema.
 
 **Usage:**
 ```bash
-dbt run-operation warehouse_profiler.list_tables --args '{schema: "your_schema"}'
+dbt run-operation dbt_warehouse_profiler.list_tables --args '{schema: "your_schema"}'
 ```
 
 **Parameters:**
@@ -88,7 +88,7 @@ List all columns in a specific table with their data types.
 
 **Usage:**
 ```bash
-dbt run-operation warehouse_profiler.list_columns --args '{schema: "your_schema", table: "your_table"}'
+dbt run-operation dbt_warehouse_profiler.list_columns --args '{schema: "your_schema", table: "your_table"}'
 ```
 
 **Parameters:**
@@ -106,7 +106,7 @@ Get comprehensive profiling information about a table.
 
 **Usage:**
 ```bash
-dbt run-operation warehouse_profiler.profile_table --args '{schema: "your_schema", table: "your_table"}'
+dbt run-operation dbt_warehouse_profiler.profile_table --args '{schema: "your_schema", table: "your_table"}'
 ```
 
 **Parameters:**
@@ -129,7 +129,7 @@ Check if a specific table is declared as a dbt source and has documentation.
 
 **Usage:**
 ```bash
-dbt run-operation warehouse_profiler.validate_source --args '{schema: "your_schema", table: "your_table"}'
+dbt run-operation dbt_warehouse_profiler.validate_source --args '{schema: "your_schema", table: "your_table"}'
 ```
 
 **Parameters:**
@@ -150,7 +150,7 @@ Scan all tables in a dataset and validate their source declarations.
 
 **Usage:**
 ```bash
-dbt run-operation warehouse_profiler.validate_dataset_sources --args '{schema: "your_schema"}'
+dbt run-operation dbt_warehouse_profiler.validate_dataset_sources --args '{schema: "your_schema"}'
 ```
 
 **Parameters:**
@@ -166,23 +166,23 @@ dbt run-operation warehouse_profiler.validate_dataset_sources --args '{schema: "
 
 ```bash
 # List all datasets
-dbt run-operation warehouse_profiler.list_schemas
+dbt run-operation dbt_warehouse_profiler.list_schemas
 
 # Explore a specific dataset
-dbt run-operation warehouse_profiler.list_tables --args '{schema: "prod_data"}'
+dbt run-operation dbt_warehouse_profiler.list_tables --args '{schema: "prod_data"}'
 
 # Profile a specific table
-dbt run-operation warehouse_profiler.profile_table --args '{schema: "prod_data", table: "users"}'
+dbt run-operation dbt_warehouse_profiler.profile_table --args '{schema: "prod_data", table: "users"}'
 ```
 
 ### Documentation Validation
 
 ```bash
 # Validate all sources in a dataset
-dbt run-operation warehouse_profiler.validate_dataset_sources --args '{schema: "raw_data"}'
+dbt run-operation dbt_warehouse_profiler.validate_dataset_sources --args '{schema: "raw_data"}'
 
 # Check a specific table
-dbt run-operation warehouse_profiler.validate_source --args '{schema: "raw_data", table: "events"}'
+dbt run-operation dbt_warehouse_profiler.validate_source --args '{schema: "raw_data", table: "events"}'
 ```
 
 ## Requirements

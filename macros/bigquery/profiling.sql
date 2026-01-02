@@ -1,8 +1,8 @@
 {% macro bigquery__list_schemas(exclude_schemas=[]) %}
 
-  {% set default_region = var('warehouse_profiler:bigquery:default_region', 'us') %}
+  {% set default_region = var('dbt_warehouse_profiler:bigquery:default_region', 'us') %}
 
-  {% set default_excludes = var('warehouse_profiler:bigquery:exclude_schemas', []) %}
+  {% set default_excludes = var('dbt_warehouse_profiler:bigquery:exclude_schemas', []) %}
 
   {% set all_excludes = exclude_schemas + default_excludes %}
 
@@ -78,7 +78,7 @@
 
 {% macro bigquery__profile_table(schema, table) %}
 
-  {% set max_rows = var('warehouse_profiler:bigquery:max_preview_rows', 10) %}
+  {% set max_rows = var('dbt_warehouse_profiler:bigquery:max_preview_rows', 10) %}
 
   {% set full_table = '`' + target.project + '.' + schema + '.' + table + '`' %}
 
