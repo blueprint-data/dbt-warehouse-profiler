@@ -1,5 +1,3 @@
-version: 2
+# Example test schema for the package
+# This file can be used to define generic tests or documentation
 
-models:
-  - name: example_test
-    description: Example test for the package

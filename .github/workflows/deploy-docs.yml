@@ -1,23 +1,24 @@
-name: CI
+name: Deploy Documentation
 
 on:
-  pull_request:
-    branches:
-      - main
   push:
     branches:
       - main
+  release:
+    types: [published]
+
+permissions:
+  contents: write
 
 jobs:
-  lint-and-test:
-    name: Lint and Test
+  deploy-docs:
+    name: Deploy to GitHub Pages
     runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -27,29 +28,26 @@ jobs:
       - name: Install dbt-core
         run: |
           pip install dbt-core
-          pip install dbt-bigquery
 
       - name: Install dependencies
         working-directory: integration_tests
         run: |
           dbt deps
 
-      - name: Validate dbt project
-        working-directory: integration_tests
-        run: |
-          dbt parse
-
-      - name: Validate main package
-        run: |
-          dbt parse
-
       - name: Generate documentation
         working-directory: integration_tests
         run: |
           dbt docs generate --empty-catalog --static
 
-      - name: Upload documentation artifacts
-        uses: actions/upload-artifact@v4
+      - name: Setup GitHub Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          name: dbt-docs
           path: integration_tests/target/static_index.html
+          name: dbt-docs
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

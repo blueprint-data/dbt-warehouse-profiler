@@ -2,6 +2,9 @@
 
 A dbt package for profiling and documenting data warehouse datasets. This package provides macros to explore your data warehouse, validate source documentation, and understand table structures.
 
+[![CI](https://github.com/blueprintdata/dbt-warehouse-profiler/workflows/CI/badge.svg)](https://github.com/blueprintdata/dbt-warehouse-profiler/actions/workflows/ci.yml)
+[![Documentation](https://github.com/blueprintdata/dbt-warehouse-profiler/workflows/Deploy%20Documentation/badge.svg)](https://blueprintdata.github.io/dbt-warehouse-profiler/)
+
 ## Supported Data Warehouses
 
 - **BigQuery** (fully supported)
