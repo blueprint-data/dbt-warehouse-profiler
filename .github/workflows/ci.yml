@@ -34,6 +34,23 @@ jobs:
         run: |
           dbt deps
 
+      - name: Create profiles directory
+        run: |
+          mkdir -p ~/.dbt
+          cat > ~/.dbt/profiles.yml <<EOF
+          dbt_warehouse_profiler:
+            target: dev
+            outputs:
+              dev:
+                type: bigquery
+                method: oauth
+                project: test-project
+                dataset: test_dataset
+                threads: 1
+                timeout_seconds: 300
+                location: US
+          EOF
+
       - name: Validate dbt project
         working-directory: integration_tests
         run: |
