@@ -1,0 +1,26 @@
+# Example profiles.yml for local development
+# Copy this file to ~/.dbt/profiles.yml and update with your credentials
+
+dbt_warehouse_profiler:
+  target: dev
+  outputs:
+    dev:
+      type: bigquery
+      method: oauth  # or 'service-account' if using service account
+      project: your-project-id
+      dataset: your_dataset_name
+      threads: 4
+      timeout_seconds: 300
+      location: US
+      # For service account authentication:
+      # keyfile: /path/to/your/keyfile.json
+
+    # Add additional environments as needed
+    # prod:
+    #   type: bigquery
+    #   method: oauth
+    #   project: your-prod-project-id
+    #   dataset: your_prod_dataset
+    #   threads: 4
+    #   timeout_seconds: 300
+    #   location: US
