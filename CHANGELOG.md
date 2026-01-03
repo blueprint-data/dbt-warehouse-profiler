@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/blueprint-data/dbt-warehouse-profiler/compare/v1.0.0...v1.1.0) (2026-01-03)
+
+
+### Features
+
+* publish first release ([514dcfa](https://github.com/blueprint-data/dbt-warehouse-profiler/commit/514dcfae85e7d5c5c45f5b0a6570ed617b80b348))
+
 # 1.0.0 (2026-01-03)
 
 
