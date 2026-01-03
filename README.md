@@ -12,12 +12,14 @@ The package uses dbt's adapter dispatch pattern, making it extensible for additi
 
 ## Installation
 
+### Option 1: Install from dbt Hub (recommended)
+
 Add the following to your `packages.yml`:
 
 ```yaml
 packages:
   - package: blueprintdata/dbt_warehouse_profiler
-    version: [">=1.0.0"]
+    version: [">=0.1.0"]
 ```
 
 Then run:
@@ -25,6 +27,28 @@ Then run:
 ```bash
 dbt deps
 ```
+
+### Option 2: Local Development Setup
+
+To set up the package for local development:
+
+```bash
+./scripts/setup-local.sh
+```
+
+This script will:
+- Create a Python virtual environment
+- Install dbt-core and your chosen database adapter (BigQuery, Snowflake, or PostgreSQL)
+- Set up `profiles.yml` template
+- Install package dependencies
+- Validate the package
+
+After setup, activate the virtual environment:
+```bash
+source venv/bin/activate
+```
+
+See [pyproject.toml](pyproject.toml) for dependency details.
 
 ## Configuration
 
@@ -185,15 +209,6 @@ dbt run-operation dbt_warehouse_profiler.validate_dataset_sources --args '{schem
 # Check a specific table
 dbt run-operation dbt_warehouse_profiler.validate_source --args '{schema: "raw_data", table: "events"}'
 ```
-
-## Requirements
-
-- dbt Core >= 1.0.0
-- BigQuery adapter
-- Appropriate BigQuery permissions to query:
-  - `INFORMATION_SCHEMA.TABLES`
-  - `INFORMATION_SCHEMA.COLUMNS`
-  - `__TABLES__` metadata
 
 ## Contributing
 

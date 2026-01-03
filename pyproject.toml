@@ -1,0 +1,56 @@
+[project]
+name = "dbt-warehouse-profiler"
+version = "0.1.0"
+description = "A dbt package for profiling and documenting data warehouse datasets"
+requires-python = ">=3.8"
+license = {text = "MIT"}
+authors = [
+    {name = "Blueprint Data"}
+]
+
+dependencies = [
+    "dbt-core>=1.10.0,<3.0.0",
+]
+
+[project.optional-dependencies]
+bigquery = [
+    "dbt-bigquery>=1.8.0",
+]
+snowflake = [
+    "dbt-snowflake>=1.8.0",
+]
+postgres = [
+    "dbt-postgres>=1.8.0",
+]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+    "black>=23.0.0",
+    "flake8>=6.0.0",
+    "mypy>=1.0.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/blueprintdata/dbt-warehouse-profiler"
+Repository = "https://github.com/blueprintdata/dbt-warehouse-profiler"
+Issues = "https://github.com/blueprintdata/dbt-warehouse-profiler/issues"
+
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.black]
+line-length = 100
+target-version = ['py38', 'py39', 'py310', 'py311']
+
+[tool.pytest.ini_options]
+testpaths = ["integration_tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+
+[tool.mypy]
+python_version = "3.8"
+warn_return_any = true
+warn_unused_configs = true
+ignore_missing_imports = true
