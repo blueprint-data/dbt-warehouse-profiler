@@ -1,0 +1,10 @@
+{
+  "name": "dbt-warehouse-profiler",
+  "version": "0.1.0",
+  "description": "A dbt package for profiling and documenting data warehouse datasets",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/blueprintdata/dbt-warehouse-profiler"
+  }
+}

@@ -1,0 +1,14 @@
+name: 'integration_tests'
+version: '1.0.0'
+config-version: 2
+
+profile: 'dbt_warehouse_profiler'
+
+require-dbt-version: [">=1.10.0", "<3.0.0"]
+
+vars:
+  dbt_warehouse_profiler:
+    bigquery:
+      default_region: 'us'
+      max_preview_rows: 10
+      exclude_schemas: []

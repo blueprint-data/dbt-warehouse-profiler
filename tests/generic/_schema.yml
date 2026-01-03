@@ -1,0 +1,5 @@
+version: 2
+
+models:
+  - name: example_test
+    description: Example test for the package

@@ -1,0 +1,39 @@
+version: 2
+
+macros:
+  - name: list_schemas
+    description: |
+      Lists all schemas (datasets) in your data warehouse project.
+      Supports excluding specific schemas from the results.
+
+  - name: list_tables
+    description: |
+      Lists all tables and views in a specific schema.
+      Returns table names along with their types (BASE TABLE, VIEW, etc.)
+
+  - name: list_columns
+    description: |
+      Lists all columns in a specific table with their data types and nullability.
+      Results are ordered by the column's ordinal position in the table.
+
+  - name: profile_table
+    description: |
+      Provides comprehensive profiling information about a table including:
+      - Row count
+      - Table size in bytes
+      - Last modified timestamp
+      - Preview of first N rows (configurable)
+      - Partitioning status
+      - Clustering status
+
+  - name: validate_source
+    description: |
+      Checks if a specific table is declared as a dbt source and has documentation.
+      Returns the source name and documentation status if found.
+
+  - name: validate_dataset_sources
+    description: |
+      Scans all tables in a dataset and validates their source declarations.
+      Provides summary statistics showing the percentage of tables that are:
+      - Declared as sources
+      - Have documentation

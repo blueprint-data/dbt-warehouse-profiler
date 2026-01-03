@@ -16,7 +16,8 @@ Add the following to your `packages.yml`:
 
 ```yaml
 packages:
-  - local: /path/to/warehouse-profiler
+  - package: blueprintdata/dbt_warehouse_profiler
+    version: [">=1.0.0"]
 ```
 
 Then run:
@@ -198,15 +199,30 @@ dbt run-operation dbt_warehouse_profiler.validate_source --args '{schema: "raw_d
 
 Contributions are welcome! Please feel free to submit issues or pull requests.
 
+### Release Process
+
+This project uses semantic-release for automated versioning. When contributing:
+
+- Use conventional commit messages: `feat:`, `fix:`, `docs:`, etc.
+- Pushing to `main` will automatically trigger a release if needed
+- See [RELEASE.md](RELEASE.md) for detailed release workflow
+
+### Running Tests
+
+To run integration tests locally:
+
+```bash
+cd integration_tests
+dbt deps
+dbt seed
+dbt run
+dbt test
+```
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## Changelog
 
-### Version 1.0.0
-- Initial release
-- BigQuery profiling macros
-- Source validation macros
-- Dataset exploration utilities
-- Uses dbt adapter dispatch pattern for extensibility
+See [CHANGELOG.md](CHANGELOG.md) for a detailed history of changes.
