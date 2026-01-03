@@ -1,3 +1,15 @@
+# 1.0.0 (2026-01-03)
+
+
+### Bug Fixes
+
+* readme ([3973bb1](https://github.com/blueprint-data/dbt-warehouse-profiler/commit/3973bb1790ba84ba61a791676c0ad6295feacf81))
+
+
+### Features
+
+* add dbt bigquery adapter for warehouse profiler ([56c6b89](https://github.com/blueprint-data/dbt-warehouse-profiler/commit/56c6b895992ab139cb4448a3f9f0e36d15ed802e))
+
 # Changelog
 
 All notable changes to this project will be documented in this file.
