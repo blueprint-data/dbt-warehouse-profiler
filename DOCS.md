@@ -1,6 +1,6 @@
 # GitHub Pages Deployment
 
-This repository automatically deploys dbt documentation to GitHub Pages on every push to the `main` branch.
+This repository automatically deploys dbt documentation to GitHub Pages on every push to `main` branch.
 
 ## Documentation URL
 
@@ -8,11 +8,21 @@ The documentation will be available at: `https://blueprintdata.github.io/dbt-war
 
 ## How It Works
 
-1. On every push to `main`, `Deploy Documentation` workflow runs
-2. It generates dbt docs using `dbt docs generate --empty-catalog --static`
-3. The `--empty-catalog` flag skips database queries (no database connection needed, but profile.yml still required)
-4. The `--static` flag generates a single `static_index.html` file
-5. The file is automatically deployed to GitHub Pages
+The CI workflow has two jobs:
+
+### 1. **Lint and Test** (runs on PRs and pushes)
+- Validates dbt project structure
+- Generates documentation
+- Uploads documentation as an artifact
+
+### 2. **Deploy to GitHub Pages** (runs only on pushes to main)
+- Regenerates documentation
+- Deploys to GitHub Pages automatically
+
+## Flags Used
+
+- `--empty-catalog`: Skips database queries (no database connection needed, but profile.yml still required)
+- `--static`: Generates a single `static_index.html` file for easy hosting
 
 ## Setting Up GitHub Pages (One-time setup)
 
