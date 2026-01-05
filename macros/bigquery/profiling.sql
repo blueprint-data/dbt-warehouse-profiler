@@ -1,4 +1,20 @@
-{% macro bigquery__list_schemas(exclude_schemas=[]) %}
+{% macro bigquery__list_databases() %}
+
+  {#
+    For BigQuery, a "database" is the project.
+
+    NOTE: This macro only returns the current project from the dbt profile.
+    BigQuery's INFORMATION_SCHEMA is project-scoped, so there's no SQL-based
+    way to list all accessible projects without using the Cloud Resource Manager API.
+
+    For exploring data sources within the current project, use list_schemas
+    to see all available datasets.
+  #}
+  {{ log(target.project, info=True) }}
+
+{% endmacro %}
+
+{% macro bigquery__list_schemas(database=none, exclude_schemas=[]) %}
 
   {% set default_region = var('dbt_warehouse_profiler:bigquery:default_region', 'us') %}
 
@@ -6,33 +22,30 @@
 
   {% set all_excludes = exclude_schemas + default_excludes %}
 
+  {# For BigQuery, database parameter is ignored since we always use target.project #}
+
   {% set query = "
-
-    SELECT DISTINCT table_schema
-
-    FROM `region-" + default_region + "`.INFORMATION_SCHEMA.TABLES
-
+    SELECT schema_name
+    FROM `region-" + default_region + ".INFORMATION_SCHEMA.SCHEMATA`
   " %}
 
   {% if all_excludes %}
-
-    {% set query = query + " WHERE table_schema NOT IN ('" + all_excludes | join("','") + "')" %}
-
+    {% set query = query + " WHERE schema_name NOT IN ('" + all_excludes | join("','") + "')" %}
   {% endif %}
 
-  {% set query = query + " ORDER BY table_schema" %}
+  {% set query = query + " ORDER BY schema_name" %}
 
   {% set results = run_query(query) %}
 
   {% for row in results %}
-
     {{ log(row[0], info=True) }}
-
   {% endfor %}
 
 {% endmacro %}
 
-{% macro bigquery__list_tables(schema) %}
+{% macro bigquery__list_tables(schema, database=none) %}
+
+  {# For BigQuery, database parameter is ignored since we always use target.project #}
 
   {% set query = "
 
@@ -52,7 +65,9 @@
 
 {% endmacro %}
 
-{% macro bigquery__list_columns(schema, table) %}
+{% macro bigquery__list_columns(schema, table, database=none) %}
+
+  {# For BigQuery, database parameter is ignored since we always use target.project #}
 
   {% set query = "
 
@@ -76,9 +91,11 @@
 
 {% endmacro %}
 
-{% macro bigquery__profile_table(schema, table) %}
+{% macro bigquery__profile_table(schema, table, database=none) %}
 
   {% set max_rows = var('dbt_warehouse_profiler:bigquery:max_preview_rows', 10) %}
+
+  {# For BigQuery, database parameter is ignored since we always use target.project #}
 
   {% set full_table = '`' + target.project + '.' + schema + '.' + table + '`' %}
 
