@@ -97,11 +97,11 @@ dbt run-operation dbt_warehouse_profiler.list_databases
 
 **Note:**
 - This macro is particularly useful for Snowflake where you may want to explore multiple databases to use as sources.
-- **BigQuery limitation**: Due to BigQuery's INFORMATION_SCHEMA being project-scoped, this macro can only return the current project from your dbt profile. Listing all accessible projects requires API access beyond what dbt macros support. To explore data sources within your current project, use `list_schemas` to see all available datasets.
+- **BigQuery limitation**: Due to BigQuery's INFORMATION_SCHEMA being project-scoped, this macro can only return the current project from your dbt profile. Listing all accessible projects requires API access beyond what dbt macros support. To explore data sources within your current project, use `list_database_schemas` to see all available datasets.
 
 ---
 
-### 2. `list_schemas`
+### 2. `list_database_schemas`
 
 List all schemas (datasets) in your data warehouse.
 
@@ -110,15 +110,15 @@ List all schemas (datasets) in your data warehouse.
 **Usage:**
 ```bash
 # List schemas in current/default database
-dbt run-operation dbt_warehouse_profiler.list_schemas
+dbt run-operation dbt_warehouse_profiler.list_database_schemas
 
 # Snowflake: List schemas in a specific database
-dbt run-operation dbt_warehouse_profiler.list_schemas --args '{database: "RAW_DATA"}'
+dbt run-operation dbt_warehouse_profiler.list_database_schemas --args '{database: "RAW_DATA"}'
 ```
 
 **With exclusions:**
 ```bash
-dbt run-operation dbt_warehouse_profiler.list_schemas --args '{exclude_schemas: ["temp_schema", "test_schema"]}'
+dbt run-operation dbt_warehouse_profiler.list_database_schemas --args '{exclude_schemas: ["temp_schema", "test_schema"]}'
 ```
 
 **Parameters:**
@@ -256,7 +256,7 @@ dbt run-operation dbt_warehouse_profiler.validate_dataset_sources --args '{schem
 dbt run-operation dbt_warehouse_profiler.list_databases
 
 # List all datasets
-dbt run-operation dbt_warehouse_profiler.list_schemas
+dbt run-operation dbt_warehouse_profiler.list_database_schemas
 
 # Explore a specific dataset
 dbt run-operation dbt_warehouse_profiler.list_tables --args '{schema: "prod_data"}'
@@ -272,7 +272,7 @@ dbt run-operation dbt_warehouse_profiler.profile_table --args '{schema: "prod_da
 dbt run-operation dbt_warehouse_profiler.list_databases
 
 # List schemas in a specific database
-dbt run-operation dbt_warehouse_profiler.list_schemas --args '{database: "RAW_DATA"}'
+dbt run-operation dbt_warehouse_profiler.list_database_schemas --args '{database: "RAW_DATA"}'
 
 # Explore tables in a specific database and schema
 dbt run-operation dbt_warehouse_profiler.list_tables --args '{schema: "PUBLIC", database: "RAW_DATA"}'

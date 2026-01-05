@@ -15,7 +15,7 @@
 
 {% endmacro %}
 
-{% macro snowflake__list_schemas(database=none, exclude_schemas=[]) %}
+{% macro snowflake__list_database_schemas(database=none, exclude_schemas=[]) %}
 
   {% set default_excludes = var('dbt_warehouse_profiler:snowflake:exclude_schemas', []) %}
 
