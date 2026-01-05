@@ -30,7 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Initial release of dbt-warehouse-profiler
-- BigQuery profiling macros (`list_schemas`, `list_tables`, `list_columns`, `profile_table`)
+- BigQuery profiling macros (`list_database_schemas`, `list_tables`, `list_columns`, `profile_table`)
 - Source validation macros (`validate_source`, `validate_dataset_sources`)
 - Dataset exploration utilities
 - Cross-database compatibility using dbt adapter dispatch pattern
@@ -47,7 +47,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Initial release of dbt-warehouse-profiler
-- BigQuery profiling macros (`list_schemas`, `list_tables`, `list_columns`, `profile_table`)
+- BigQuery profiling macros (`list_database_schemas`, `list_tables`, `list_columns`, `profile_table`)
 - Source validation macros (`validate_source`, `validate_dataset_sources`)
 - Dataset exploration utilities
 - Cross-database compatibility using dbt adapter dispatch pattern

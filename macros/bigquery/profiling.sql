@@ -7,14 +7,14 @@
     BigQuery's INFORMATION_SCHEMA is project-scoped, so there's no SQL-based
     way to list all accessible projects without using the Cloud Resource Manager API.
 
-    For exploring data sources within the current project, use list_schemas
+    For exploring data sources within the current project, use list_database_schemas
     to see all available datasets.
   #}
   {{ log(target.project, info=True) }}
 
 {% endmacro %}
 
-{% macro bigquery__list_schemas(database=none, exclude_schemas=[]) %}
+{% macro bigquery__list_database_schemas(database=none, exclude_schemas=[]) %}
 
   {% set default_region = var('dbt_warehouse_profiler:bigquery:default_region', 'us') %}
 

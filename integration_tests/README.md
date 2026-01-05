@@ -14,7 +14,7 @@ This directory contains integration tests for dbt-warehouse-profiler.
 
 2. Test the macros:
    ```bash
-   dbt run-operation dbt_warehouse_profiler.list_schemas
+   dbt run-operation dbt_warehouse_profiler.list_database_schemas
    dbt run-operation dbt_warehouse_profiler.list_tables --args '{schema: "test_data"}'
    dbt run-operation dbt_warehouse_profiler.validate_dataset_sources --args '{schema: "test_data"}'
    ```

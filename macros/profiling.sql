@@ -2,8 +2,8 @@
   {{ return(adapter.dispatch('list_databases', 'dbt_warehouse_profiler')()) }}
 {% endmacro %}
 
-{% macro list_schemas(database=none, exclude_schemas=[]) %}
-  {{ return(adapter.dispatch('list_schemas', 'dbt_warehouse_profiler')(database, exclude_schemas)) }}
+{% macro list_database_schemas(database=none, exclude_schemas=[]) %}
+  {{ return(adapter.dispatch('list_database_schemas', 'dbt_warehouse_profiler')(database, exclude_schemas)) }}
 {% endmacro %}
 
 {% macro list_tables(schema, database=none) %}
