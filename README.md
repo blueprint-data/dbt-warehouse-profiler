@@ -8,7 +8,7 @@ A dbt package for profiling and documenting data warehouse datasets. This packag
 ## Supported Data Warehouses
 
 - **BigQuery** (fully supported)
-- **Snowflake** (planned)
+- **Snowflake** (fully supported)
 - **PostgreSQL** (planned)
 
 The package uses dbt's adapter dispatch pattern, making it extensible for additional databases.
@@ -64,23 +64,56 @@ vars:
       default_region: 'us'
       max_preview_rows: 10
       exclude_schemas: []
+    snowflake:
+      max_preview_rows: 10
+      exclude_schemas: []
 ```
 
 **Configuration Options:**
 
+### BigQuery
 - `default_region`: Default BigQuery region for cross-dataset queries (default: 'us')
+- `max_preview_rows`: Maximum number of preview rows to show in profile_table (default: 10)
+- `exclude_schemas`: Schemas to exclude from validation by default (default: [])
+
+### Snowflake
 - `max_preview_rows`: Maximum number of preview rows to show in profile_table (default: 10)
 - `exclude_schemas`: Schemas to exclude from validation by default (default: [])
 
 ## Available Macros
 
-### 1. `list_schemas`
+### 1. `list_databases`
 
-List all schemas (datasets) in your BigQuery project.
+List all databases accessible in your data warehouse.
 
 **Usage:**
 ```bash
+dbt run-operation dbt_warehouse_profiler.list_databases
+```
+
+**Output:**
+- For **Snowflake**: Lists all accessible databases in the account
+- For **BigQuery**: Returns the current project only
+
+**Note:**
+- This macro is particularly useful for Snowflake where you may want to explore multiple databases to use as sources.
+- **BigQuery limitation**: Due to BigQuery's INFORMATION_SCHEMA being project-scoped, this macro can only return the current project from your dbt profile. Listing all accessible projects requires API access beyond what dbt macros support. To explore data sources within your current project, use `list_schemas` to see all available datasets.
+
+---
+
+### 2. `list_schemas`
+
+List all schemas (datasets) in your data warehouse.
+
+**For Snowflake**, you can optionally specify which database to explore:
+
+**Usage:**
+```bash
+# List schemas in current/default database
 dbt run-operation dbt_warehouse_profiler.list_schemas
+
+# Snowflake: List schemas in a specific database
+dbt run-operation dbt_warehouse_profiler.list_schemas --args '{database: "RAW_DATA"}'
 ```
 
 **With exclusions:**
@@ -89,80 +122,101 @@ dbt run-operation dbt_warehouse_profiler.list_schemas --args '{exclude_schemas: 
 ```
 
 **Parameters:**
+- `database` (optional, Snowflake only): Name of the database to explore. Defaults to target database.
 - `exclude_schemas` (optional): List of schema names to exclude from results
 
 ---
 
-### 2. `list_tables`
+### 3. `list_tables`
 
 List all tables and views in a specific schema.
 
 **Usage:**
 ```bash
+# List tables in a schema
 dbt run-operation dbt_warehouse_profiler.list_tables --args '{schema: "your_schema"}'
+
+# Snowflake: List tables in a specific database and schema
+dbt run-operation dbt_warehouse_profiler.list_tables --args '{schema: "PUBLIC", database: "RAW_DATA"}'
 ```
 
 **Parameters:**
 - `schema` (required): Name of the schema to list tables from
+- `database` (optional, Snowflake only): Name of the database. Defaults to target database.
 
 **Output:**
 - Table name and type (BASE TABLE, VIEW, etc.)
 
 ---
 
-### 3. `list_columns`
+### 4. `list_columns`
 
 List all columns in a specific table with their data types.
 
 **Usage:**
 ```bash
+# List columns in a table
 dbt run-operation dbt_warehouse_profiler.list_columns --args '{schema: "your_schema", table: "your_table"}'
+
+# Snowflake: List columns in a specific database
+dbt run-operation dbt_warehouse_profiler.list_columns --args '{schema: "PUBLIC", table: "users", database: "RAW_DATA"}'
 ```
 
 **Parameters:**
 - `schema` (required): Name of the schema
 - `table` (required): Name of the table
+- `database` (optional, Snowflake only): Name of the database. Defaults to target database.
 
 **Output:**
 - Column name, data type, and nullability
 
 ---
 
-### 4. `profile_table`
+### 5. `profile_table`
 
 Get comprehensive profiling information about a table.
 
 **Usage:**
 ```bash
+# Profile a table
 dbt run-operation dbt_warehouse_profiler.profile_table --args '{schema: "your_schema", table: "your_table"}'
+
+# Snowflake: Profile a table in a specific database
+dbt run-operation dbt_warehouse_profiler.profile_table --args '{schema: "PUBLIC", table: "users", database: "RAW_DATA"}'
 ```
 
 **Parameters:**
 - `schema` (required): Name of the schema
 - `table` (required): Name of the table
+- `database` (optional, Snowflake only): Name of the database. Defaults to target database.
 
 **Output:**
 - Row count
 - Table size in bytes
 - Last modified timestamp
 - Preview of first 10 rows
-- Partitioning status
-- Clustering status
+- Partitioning status (BigQuery)
+- Clustering status (BigQuery and Snowflake)
 
 ---
 
-### 5. `validate_source`
+### 6. `validate_source`
 
 Check if a specific table is declared as a dbt source and has documentation.
 
 **Usage:**
 ```bash
+# Validate a source
 dbt run-operation dbt_warehouse_profiler.validate_source --args '{schema: "your_schema", table: "your_table"}'
+
+# Snowflake: Validate a source in a specific database
+dbt run-operation dbt_warehouse_profiler.validate_source --args '{schema: "PUBLIC", table: "users", database: "RAW_DATA"}'
 ```
 
 **Parameters:**
 - `schema` (required): Name of the schema
 - `table` (required): Name of the table
+- `database` (optional, Snowflake only): Name of the database. Defaults to target database.
 
 **Output:**
 - Whether table is declared as a source
@@ -172,17 +226,22 @@ dbt run-operation dbt_warehouse_profiler.validate_source --args '{schema: "your_
 
 ---
 
-### 6. `validate_dataset_sources`
+### 7. `validate_dataset_sources`
 
 Scan all tables in a dataset and validate their source declarations.
 
 **Usage:**
 ```bash
+# Validate all sources in a schema
 dbt run-operation dbt_warehouse_profiler.validate_dataset_sources --args '{schema: "your_schema"}'
+
+# Snowflake: Validate sources in a specific database
+dbt run-operation dbt_warehouse_profiler.validate_dataset_sources --args '{schema: "PUBLIC", database: "RAW_DATA"}'
 ```
 
 **Parameters:**
 - `schema` (required): Name of the schema to validate
+- `database` (optional, Snowflake only): Name of the database. Defaults to target database.
 
 **Output:**
 - List of all tables with their documentation status
@@ -190,9 +249,12 @@ dbt run-operation dbt_warehouse_profiler.validate_dataset_sources --args '{schem
 
 ## Examples
 
-### Quick Dataset Exploration
+### Quick Dataset Exploration (BigQuery)
 
 ```bash
+# List the current project
+dbt run-operation dbt_warehouse_profiler.list_databases
+
 # List all datasets
 dbt run-operation dbt_warehouse_profiler.list_schemas
 
@@ -203,11 +265,30 @@ dbt run-operation dbt_warehouse_profiler.list_tables --args '{schema: "prod_data
 dbt run-operation dbt_warehouse_profiler.profile_table --args '{schema: "prod_data", table: "users"}'
 ```
 
+### Quick Database Exploration (Snowflake)
+
+```bash
+# List all accessible databases
+dbt run-operation dbt_warehouse_profiler.list_databases
+
+# List schemas in a specific database
+dbt run-operation dbt_warehouse_profiler.list_schemas --args '{database: "RAW_DATA"}'
+
+# Explore tables in a specific database and schema
+dbt run-operation dbt_warehouse_profiler.list_tables --args '{schema: "PUBLIC", database: "RAW_DATA"}'
+
+# Profile a specific table
+dbt run-operation dbt_warehouse_profiler.profile_table --args '{schema: "PUBLIC", table: "CUSTOMERS", database: "RAW_DATA"}'
+```
+
 ### Documentation Validation
 
 ```bash
-# Validate all sources in a dataset
+# BigQuery: Validate all sources in a dataset
 dbt run-operation dbt_warehouse_profiler.validate_dataset_sources --args '{schema: "raw_data"}'
+
+# Snowflake: Validate all sources in a database schema
+dbt run-operation dbt_warehouse_profiler.validate_dataset_sources --args '{schema: "PUBLIC", database: "RAW_DATA"}'
 
 # Check a specific table
 dbt run-operation dbt_warehouse_profiler.validate_source --args '{schema: "raw_data", table: "events"}'

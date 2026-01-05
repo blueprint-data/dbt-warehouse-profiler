@@ -21,6 +21,13 @@ vars:
       # Maximum number of preview rows to show in profile_table
       max_preview_rows: 10
 
+    snowflake:
+      # Schemas to exclude from validation by default
+      exclude_schemas: []
+
+      # Maximum number of preview rows to show in profile_table
+      max_preview_rows: 10
+
 # Dispatch configuration for cross-database compatibility
 dispatch:
   - macro_namespace: dbt_warehouse_profiler
