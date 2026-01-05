@@ -1,3 +1,11 @@
+## [1.1.3](https://github.com/blueprint-data/dbt-warehouse-profiler/compare/v1.1.2...v1.1.3) (2026-01-05)
+
+
+### Bug Fixes
+
+* change list_schemas macro name to avoid conflicts ([59ebb79](https://github.com/blueprint-data/dbt-warehouse-profiler/commit/59ebb799a6e34ccbeb2dde07d51506414474ce06))
+* parse issue ([ff3eedd](https://github.com/blueprint-data/dbt-warehouse-profiler/commit/ff3eedd859718a42652ed1c5e9d89feb2e13a713))
+
 ## [1.1.2](https://github.com/blueprint-data/dbt-warehouse-profiler/compare/v1.1.1...v1.1.2) (2026-01-05)
 
 
