@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/blueprint-data/dbt-warehouse-profiler/compare/v1.1.3...v1.2.0) (2026-01-08)
+
+
+### Features
+
+* **profiling:** add profile_columns macro for detailed column statistics ([56c2c85](https://github.com/blueprint-data/dbt-warehouse-profiler/commit/56c2c8593f10699cb120e454c038b76a3dbad269))
+
 ## [1.1.3](https://github.com/blueprint-data/dbt-warehouse-profiler/compare/v1.1.2...v1.1.3) (2026-01-05)
 
 
