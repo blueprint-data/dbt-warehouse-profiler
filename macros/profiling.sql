@@ -18,3 +18,7 @@
   {{ return(adapter.dispatch('profile_table', 'dbt_warehouse_profiler')(schema, table, database)) }}
 {% endmacro %}
 
+{% macro profile_columns(schema, table, database=none) %}
+  {{ return(adapter.dispatch('profile_columns', 'dbt_warehouse_profiler')(schema, table, database)) }}
+{% endmacro %}
+

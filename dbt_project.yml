@@ -4,7 +4,7 @@ version: '1.0.0'
 
 config-version: 2
 
-require-dbt-version: [">=1.10.0", "<3.0.0"]
+require-dbt-version: [">=1.8.0", "<3.0.0"]
 
 profile: 'dbt_warehouse_profiler'
 
@@ -21,12 +21,18 @@ vars:
       # Maximum number of preview rows to show in profile_table
       max_preview_rows: 10
 
+      # Maximum number of sample values to show in profile_columns
+      max_sample_values: 5
+
     snowflake:
       # Schemas to exclude from validation by default
       exclude_schemas: []
 
       # Maximum number of preview rows to show in profile_table
       max_preview_rows: 10
+
+      # Maximum number of sample values to show in profile_columns
+      max_sample_values: 5
 
 # Dispatch configuration for cross-database compatibility
 dispatch:

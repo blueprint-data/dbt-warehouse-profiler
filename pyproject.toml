@@ -9,7 +9,7 @@ authors = [
 ]
 
 dependencies = [
-    "dbt-core>=1.10.0,<3.0.0",
+    "dbt-core>=1.8.0,<3.0.0",
 ]
 
 [project.optional-dependencies]
