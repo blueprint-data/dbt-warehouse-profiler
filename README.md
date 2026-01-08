@@ -74,10 +74,12 @@ vars:
 ### BigQuery
 - `default_region`: Default BigQuery region for cross-dataset queries (default: 'us')
 - `max_preview_rows`: Maximum number of preview rows to show in profile_table (default: 10)
+- `max_sample_values`: Maximum number of sample values to show in profile_columns (default: 5)
 - `exclude_schemas`: Schemas to exclude from validation by default (default: [])
 
 ### Snowflake
 - `max_preview_rows`: Maximum number of preview rows to show in profile_table (default: 10)
+- `max_sample_values`: Maximum number of sample values to show in profile_columns (default: 5)
 - `exclude_schemas`: Schemas to exclude from validation by default (default: [])
 
 ## Available Macros
@@ -200,7 +202,62 @@ dbt run-operation dbt_warehouse_profiler.profile_table --args '{schema: "PUBLIC"
 
 ---
 
-### 6. `validate_source`
+### 6. `profile_columns`
+
+Get detailed column-level statistics for a table.
+
+**Usage:**
+```bash
+# Profile columns in a table
+dbt run-operation dbt_warehouse_profiler.profile_columns --args '{schema: "your_schema", table: "your_table"}'
+
+# Snowflake: Profile columns in a specific database
+dbt run-operation dbt_warehouse_profiler.profile_columns --args '{schema: "PUBLIC", table: "users", database: "RAW_DATA"}'
+```
+
+**Parameters:**
+- `schema` (required): Name of the schema
+- `table` (required): Name of the table
+- `database` (optional, Snowflake only): Name of the database. Defaults to target database.
+
+**Output:**
+For each column, the macro outputs statistics based on column type:
+
+- **Numeric columns**: Null count/%, distinct count, min, max, avg
+- **Date/Time columns**: Null count/%, distinct count, min, max
+- **String columns**: Null count/%, distinct count, sample values
+- **Boolean columns**: Null count/%, distinct count, true/false counts
+- **Complex types (ARRAY, STRUCT, JSON)**: Null count/% only
+
+**Example Output:**
+```
+=== Column Profile for prod_data.users ===
+
+Total rows: 1234567
+
+Column: user_id (INT64, NOT NULL)
+  Nulls: 0 (0.0%)
+  Distinct: 1234567
+  Min: 1 | Max: 1234567 | Avg: 617284.0
+
+Column: email (STRING, NULLABLE)
+  Nulls: 1234 (0.1%)
+  Distinct: 1233333
+  Samples: ['user@example.com', 'test@test.org', 'admin@company.io']
+
+Column: is_active (BOOL, NOT NULL)
+  Nulls: 0 (0.0%)
+  Distinct: 2
+  True: 1100000 (89.1%) | False: 134567 (10.9%)
+
+=== Summary ===
+Columns analyzed: 3
+Columns with nulls: 1
+```
+
+---
+
+### 7. `validate_source`
 
 Check if a specific table is declared as a dbt source and has documentation.
 
@@ -226,7 +283,7 @@ dbt run-operation dbt_warehouse_profiler.validate_source --args '{schema: "PUBLI
 
 ---
 
-### 7. `validate_dataset_sources`
+### 8. `validate_dataset_sources`
 
 Scan all tables in a dataset and validate their source declarations.
 
@@ -263,6 +320,9 @@ dbt run-operation dbt_warehouse_profiler.list_tables --args '{schema: "prod_data
 
 # Profile a specific table
 dbt run-operation dbt_warehouse_profiler.profile_table --args '{schema: "prod_data", table: "users"}'
+
+# Get detailed column statistics
+dbt run-operation dbt_warehouse_profiler.profile_columns --args '{schema: "prod_data", table: "users"}'
 ```
 
 ### Quick Database Exploration (Snowflake)
@@ -279,6 +339,9 @@ dbt run-operation dbt_warehouse_profiler.list_tables --args '{schema: "PUBLIC", 
 
 # Profile a specific table
 dbt run-operation dbt_warehouse_profiler.profile_table --args '{schema: "PUBLIC", table: "CUSTOMERS", database: "RAW_DATA"}'
+
+# Get detailed column statistics
+dbt run-operation dbt_warehouse_profiler.profile_columns --args '{schema: "PUBLIC", table: "CUSTOMERS", database: "RAW_DATA"}'
 ```
 
 ### Documentation Validation

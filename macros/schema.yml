@@ -26,6 +26,24 @@ macros:
       - Partitioning status
       - Clustering status
 
+  - name: profile_columns
+    description: |
+      Provides detailed column-level statistics for a table including:
+      - Data type with precision
+      - Null count and percentage
+      - Distinct value count
+      - Min/Max/Avg values (for numeric columns)
+      - Min/Max values (for date/time columns)
+      - True/False counts (for boolean columns)
+      - Sample values (for string columns)
+
+      Statistics vary by column type:
+      - Numeric: nulls, distinct, min, max, avg
+      - Date/Time: nulls, distinct, min, max
+      - String: nulls, distinct, sample values
+      - Boolean: nulls, distinct, true/false counts
+      - Complex (ARRAY, STRUCT, JSON): nulls only
+
   - name: validate_source
     description: |
       Checks if a specific table is declared as a dbt source and has documentation.

@@ -34,7 +34,7 @@ pip install --upgrade pip setuptools wheel
 
 # Install dbt-core
 echo "Installing dbt-core..."
-pip install "dbt-core>=1.10.0,<3.0.0"
+pip install "dbt-core>=1.8.0,<3.0.0"
 
 # Ask which adapter to install
 echo ""
