@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/blueprint-data/dbt-warehouse-profiler/compare/v1.2.0...v1.3.0) (2026-01-13)
+
+
+### Features
+
+* add execute_raw_query macro for ad-hoc SQL query execution ([97f787e](https://github.com/blueprint-data/dbt-warehouse-profiler/commit/97f787eae2236fe002d13678a95abd91650fbe61))
+
 # [1.2.0](https://github.com/blueprint-data/dbt-warehouse-profiler/compare/v1.1.3...v1.2.0) (2026-01-08)
 
 
