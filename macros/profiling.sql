@@ -22,3 +22,7 @@
   {{ return(adapter.dispatch('profile_columns', 'dbt_warehouse_profiler')(schema, table, database)) }}
 {% endmacro %}
 
+{% macro execute_raw_query(query) %}
+  {{ return(adapter.dispatch('execute_raw_query', 'dbt_warehouse_profiler')(query)) }}
+{% endmacro %}
+

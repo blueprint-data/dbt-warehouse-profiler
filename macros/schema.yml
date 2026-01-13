@@ -55,3 +55,36 @@ macros:
       Provides summary statistics showing the percentage of tables that are:
       - Declared as sources
       - Have documentation
+
+  - name: execute_raw_query
+    description: |
+      Executes a raw SQL query against your data warehouse and displays the results.
+      
+      This macro allows you to run arbitrary SQL queries for ad-hoc analysis and exploration.
+      The query is executed using your dbt profile connection, so all permissions and 
+      credentials are inherited from your configured profile.
+      
+      **Output:**
+      - Number of rows and columns returned
+      - Column headers
+      - All result rows (use LIMIT to control output size)
+      
+      **Security:**
+      - Uses existing dbt profile credentials
+      - Subject to warehouse permissions
+      - No additional authentication required
+      
+      **Usage examples:**
+      ```sql
+      -- Simple SELECT query
+      SELECT * FROM my_schema.my_table LIMIT 10
+      
+      -- Aggregation query
+      SELECT status, COUNT(*) FROM orders GROUP BY status
+      
+      -- JOIN query
+      SELECT u.name, o.total 
+      FROM users u 
+      JOIN orders o ON u.id = o.user_id 
+      LIMIT 100
+      ```

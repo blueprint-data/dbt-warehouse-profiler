@@ -416,3 +416,42 @@
   {{ log('Columns with nulls: ' + (ns.columns_with_nulls | string), info=True) }}
 
 {% endmacro %}
+
+{% macro bigquery__execute_raw_query(query) %}
+
+  {# Execute the raw query #}
+  {% set results = run_query(query) %}
+
+  {# Display results #}
+  {% if results %}
+    {% set row_count = results.rows | length %}
+    {% set col_count = results.columns | length %}
+    
+    {{ log('', info=True) }}
+    {{ log('Query executed successfully', info=True) }}
+    {{ log('Rows returned: ' + (row_count | string), info=True) }}
+    {{ log('Columns: ' + (col_count | string), info=True) }}
+    {{ log('', info=True) }}
+    
+    {% if row_count > 0 %}
+      {# Display column headers #}
+      {% set header_parts = [] %}
+      {% for col_name in results.columns %}
+        {% do header_parts.append(col_name) %}
+      {% endfor %}
+      {{ log(header_parts | join(' | '), info=True) }}
+      {{ log('-' * 80, info=True) }}
+      
+      {# Display rows #}
+      {% for row in results %}
+        {{ log(row | string, info=True) }}
+      {% endfor %}
+    {% else %}
+      {{ log('No rows returned', info=True) }}
+    {% endif %}
+    
+  {% else %}
+    {{ log('Query executed but returned no results', info=True) }}
+  {% endif %}
+
+{% endmacro %}

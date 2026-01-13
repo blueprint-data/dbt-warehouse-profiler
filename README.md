@@ -304,6 +304,47 @@ dbt run-operation dbt_warehouse_profiler.validate_dataset_sources --args '{schem
 - List of all tables with their documentation status
 - Summary statistics showing percentage of documented sources
 
+---
+
+### 9. `execute_raw_query`
+
+Execute arbitrary SQL queries against your data warehouse for ad-hoc analysis.
+
+**Usage:**
+```bash
+# Execute a simple SELECT query
+dbt run-operation dbt_warehouse_profiler.execute_raw_query --args '{query: "SELECT * FROM my_schema.my_table LIMIT 10"}'
+
+# Execute an aggregation query
+dbt run-operation dbt_warehouse_profiler.execute_raw_query --args '{query: "SELECT status, COUNT(*) as count FROM orders GROUP BY status"}'
+
+# Execute a JOIN query (BigQuery)
+dbt run-operation dbt_warehouse_profiler.execute_raw_query --args '{query: "SELECT u.name, o.total FROM `project.dataset.users` u JOIN `project.dataset.orders` o ON u.id = o.user_id LIMIT 100"}'
+
+# Execute a query with complex filters (Snowflake)
+dbt run-operation dbt_warehouse_profiler.execute_raw_query --args '{query: "SELECT * FROM ANALYTICS.PUBLIC.SALES WHERE sale_date >= '\''2024-01-01'\'' AND amount > 1000 ORDER BY amount DESC LIMIT 50"}'
+```
+
+**Parameters:**
+- `query` (required): The SQL query to execute
+
+**Output:**
+- Number of rows and columns returned
+- Column headers
+- All result rows
+
+**Security Notes:**
+- Uses your existing dbt profile credentials
+- Subject to your warehouse user permissions
+- No additional authentication required
+- Be cautious with queries that return large result sets (use LIMIT)
+
+**Tips:**
+- Always use LIMIT to control output size for large tables
+- For BigQuery, remember to use backticks for fully qualified table names
+- For Snowflake, use proper quoting for case-sensitive identifiers
+- Single quotes in queries need to be escaped as `'\''` in bash arguments
+
 ## Examples
 
 ### Quick Dataset Exploration (BigQuery)
@@ -355,6 +396,19 @@ dbt run-operation dbt_warehouse_profiler.validate_dataset_sources --args '{schem
 
 # Check a specific table
 dbt run-operation dbt_warehouse_profiler.validate_source --args '{schema: "raw_data", table: "events"}'
+```
+
+### Ad-Hoc Query Execution
+
+```bash
+# Execute a simple query
+dbt run-operation dbt_warehouse_profiler.execute_raw_query --args '{query: "SELECT COUNT(*) FROM my_schema.users"}'
+
+# BigQuery: Analyze data with aggregations
+dbt run-operation dbt_warehouse_profiler.execute_raw_query --args '{query: "SELECT DATE(created_at) as date, COUNT(*) as signups FROM `project.dataset.users` WHERE created_at >= '\''2024-01-01'\'' GROUP BY date ORDER BY date DESC LIMIT 30"}'
+
+# Snowflake: Join multiple tables
+dbt run-operation dbt_warehouse_profiler.execute_raw_query --args '{query: "SELECT c.customer_name, COUNT(o.order_id) as order_count, SUM(o.total) as total_spent FROM CUSTOMERS c LEFT JOIN ORDERS o ON c.id = o.customer_id GROUP BY c.customer_name ORDER BY total_spent DESC LIMIT 20"}'
 ```
 
 ## Contributing
