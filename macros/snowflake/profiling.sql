@@ -245,7 +245,7 @@
   {# Get row count first #}
   {% set count_query = 'SELECT COUNT(*) as cnt FROM ' + full_table %}
   {% set count_result = run_query(count_query) %}
-  {% set total_rows = count_result[0][0] if count_result and count_result.rows | length > 0 else 0 %}
+  {% set total_rows = (count_result[0][0] | int) if count_result and count_result.rows | length > 0 else 0 %}
 
   {# Build result structure #}
   {% set result = {
@@ -313,7 +313,7 @@
 
       {% set stats = run_query(stats_query) %}
       {% if stats and stats.rows | length > 0 %}
-        {% set null_count = stats[0][0] %}
+        {% set null_count = stats[0][0] | int %}
         {% set null_pct = (null_count / total_rows * 100) | round(2) %}
         {% do col_result.update({'null_count': null_count, 'null_percentage': null_pct, 'type_category': 'complex'}) %}
         {% if null_count > 0 %}
@@ -335,10 +335,10 @@
 
       {% set stats = run_query(stats_query) %}
       {% if stats and stats.rows | length > 0 %}
-        {% set null_count = stats[0][0] %}
-        {% set distinct_count = stats[0][1] %}
-        {% set true_count = stats[0][2] %}
-        {% set false_count = stats[0][3] %}
+        {% set null_count = stats[0][0] | int %}
+        {% set distinct_count = stats[0][1] | int %}
+        {% set true_count = stats[0][2] | int %}
+        {% set false_count = stats[0][3] | int %}
         {% set null_pct = (null_count / total_rows * 100) | round(2) %}
         {% set non_null_total = true_count + false_count %}
         {% set true_pct = ((true_count / non_null_total * 100) | round(1)) if non_null_total > 0 else 0 %}
@@ -374,8 +374,8 @@
 
       {% set stats = run_query(stats_query) %}
       {% if stats and stats.rows | length > 0 %}
-        {% set null_count = stats[0][0] %}
-        {% set distinct_count = stats[0][1] %}
+        {% set null_count = stats[0][0] | int %}
+        {% set distinct_count = stats[0][1] | int %}
         {% set min_val = stats[0][2] %}
         {% set max_val = stats[0][3] %}
         {% set avg_val = stats[0][4] %}
@@ -385,9 +385,9 @@
           'null_count': null_count,
           'null_percentage': null_pct,
           'distinct_count': distinct_count,
-          'min': min_val,
-          'max': max_val,
-          'avg': avg_val | round(2) if avg_val is not none else none,
+          'min': min_val | float if min_val is not none else none,
+          'max': max_val | float if max_val is not none else none,
+          'avg': avg_val | float | round(2) if avg_val is not none else none,
           'type_category': 'numeric'
         }) %}
         {% if null_count > 0 %}
@@ -409,8 +409,8 @@
 
       {% set stats = run_query(stats_query) %}
       {% if stats and stats.rows | length > 0 %}
-        {% set null_count = stats[0][0] %}
-        {% set distinct_count = stats[0][1] %}
+        {% set null_count = stats[0][0] | int %}
+        {% set distinct_count = stats[0][1] | int %}
         {% set min_val = stats[0][2] %}
         {% set max_val = stats[0][3] %}
         {% set null_pct = (null_count / total_rows * 100) | round(2) %}
@@ -451,8 +451,8 @@
       {% set samples = run_query(sample_query) %}
 
       {% if stats and stats.rows | length > 0 %}
-        {% set null_count = stats[0][0] %}
-        {% set distinct_count = stats[0][1] %}
+        {% set null_count = stats[0][0] | int %}
+        {% set distinct_count = stats[0][1] | int %}
         {% set null_pct = (null_count / total_rows * 100) | round(2) %}
 
         {% set sample_list = [] %}
