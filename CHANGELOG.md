@@ -1,3 +1,10 @@
+## [1.4.1](https://github.com/blueprint-data/dbt-warehouse-profiler/compare/v1.4.0...v1.4.1) (2026-01-17)
+
+
+### Bug Fixes
+
+* **profiling:** use column_names instead of columns attribute ([cf89178](https://github.com/blueprint-data/dbt-warehouse-profiler/commit/cf89178844d65dc09fc99c9265ff070889aef2ef))
+
 # [1.3.0](https://github.com/blueprint-data/dbt-warehouse-profiler/compare/v1.2.0...v1.3.0) (2026-01-13)
 
 
