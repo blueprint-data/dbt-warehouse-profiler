@@ -368,7 +368,7 @@
           COUNT(DISTINCT "{{ col_name }}") as distinct_count,
           MIN("{{ col_name }}") as min_val,
           MAX("{{ col_name }}") as max_val,
-          AVG(TRY_CAST("{{ col_name }}" AS FLOAT)) as avg_val
+          AVG("{{ col_name }}") as avg_val
         FROM {{ full_table }}
       {% endset %}
 
