@@ -82,6 +82,30 @@ vars:
 - `max_sample_values`: Maximum number of sample values to show in profile_columns (default: 5)
 - `exclude_schemas`: Schemas to exclude from validation by default (default: [])
 
+## JSON Output Format
+
+All macros support an optional `output_format` parameter for programmatic consumption. By default, macros output human-readable text. Set `output_format: "json"` to get structured JSON output instead.
+
+**Usage:**
+```bash
+# Human-readable output (default)
+dbt run-operation dbt_warehouse_profiler.list_tables --args '{schema: "prod_data"}'
+
+# JSON output for programmatic use
+dbt run-operation dbt_warehouse_profiler.list_tables --args '{schema: "prod_data", output_format: "json"}'
+```
+
+**Example JSON Output:**
+```json
+{"tables": [{"name": "users", "type": "BASE TABLE"}, {"name": "orders", "type": "VIEW"}]}
+```
+
+This is useful for:
+- Integrating with CI/CD pipelines
+- Building automation scripts
+- Feeding data into other tools and services
+- Parsing output programmatically
+
 ## Available Macros
 
 ### 1. `list_databases`
@@ -90,12 +114,24 @@ List all databases accessible in your data warehouse.
 
 **Usage:**
 ```bash
+# Human-readable output
 dbt run-operation dbt_warehouse_profiler.list_databases
+
+# JSON output
+dbt run-operation dbt_warehouse_profiler.list_databases --args '{output_format: "json"}'
 ```
+
+**Parameters:**
+- `output_format` (optional): Output format - `"text"` (default) or `"json"`
 
 **Output:**
 - For **Snowflake**: Lists all accessible databases in the account
 - For **BigQuery**: Returns the current project only
+
+**JSON Schema:**
+```json
+{"databases": ["my_project"]}
+```
 
 **Note:**
 - This macro is particularly useful for Snowflake where you may want to explore multiple databases to use as sources.
@@ -116,6 +152,9 @@ dbt run-operation dbt_warehouse_profiler.list_database_schemas
 
 # Snowflake: List schemas in a specific database
 dbt run-operation dbt_warehouse_profiler.list_database_schemas --args '{database: "RAW_DATA"}'
+
+# JSON output
+dbt run-operation dbt_warehouse_profiler.list_database_schemas --args '{output_format: "json"}'
 ```
 
 **With exclusions:**
@@ -126,6 +165,12 @@ dbt run-operation dbt_warehouse_profiler.list_database_schemas --args '{exclude_
 **Parameters:**
 - `database` (optional, Snowflake only): Name of the database to explore. Defaults to target database.
 - `exclude_schemas` (optional): List of schema names to exclude from results
+- `output_format` (optional): Output format - `"text"` (default) or `"json"`
+
+**JSON Schema:**
+```json
+{"schemas": ["public", "raw_data", "analytics"]}
+```
 
 ---
 
@@ -140,14 +185,23 @@ dbt run-operation dbt_warehouse_profiler.list_tables --args '{schema: "your_sche
 
 # Snowflake: List tables in a specific database and schema
 dbt run-operation dbt_warehouse_profiler.list_tables --args '{schema: "PUBLIC", database: "RAW_DATA"}'
+
+# JSON output
+dbt run-operation dbt_warehouse_profiler.list_tables --args '{schema: "your_schema", output_format: "json"}'
 ```
 
 **Parameters:**
 - `schema` (required): Name of the schema to list tables from
 - `database` (optional, Snowflake only): Name of the database. Defaults to target database.
+- `output_format` (optional): Output format - `"text"` (default) or `"json"`
 
 **Output:**
 - Table name and type (BASE TABLE, VIEW, etc.)
+
+**JSON Schema:**
+```json
+{"tables": [{"name": "users", "type": "BASE TABLE"}, {"name": "orders_view", "type": "VIEW"}]}
+```
 
 ---
 
@@ -162,15 +216,24 @@ dbt run-operation dbt_warehouse_profiler.list_columns --args '{schema: "your_sch
 
 # Snowflake: List columns in a specific database
 dbt run-operation dbt_warehouse_profiler.list_columns --args '{schema: "PUBLIC", table: "users", database: "RAW_DATA"}'
+
+# JSON output
+dbt run-operation dbt_warehouse_profiler.list_columns --args '{schema: "your_schema", table: "your_table", output_format: "json"}'
 ```
 
 **Parameters:**
 - `schema` (required): Name of the schema
 - `table` (required): Name of the table
 - `database` (optional, Snowflake only): Name of the database. Defaults to target database.
+- `output_format` (optional): Output format - `"text"` (default) or `"json"`
 
 **Output:**
 - Column name, data type, and nullability
+
+**JSON Schema:**
+```json
+{"columns": [{"name": "id", "data_type": "INT64", "is_nullable": "NO"}, {"name": "email", "data_type": "STRING", "is_nullable": "YES"}]}
+```
 
 ---
 
@@ -185,12 +248,16 @@ dbt run-operation dbt_warehouse_profiler.profile_table --args '{schema: "your_sc
 
 # Snowflake: Profile a table in a specific database
 dbt run-operation dbt_warehouse_profiler.profile_table --args '{schema: "PUBLIC", table: "users", database: "RAW_DATA"}'
+
+# JSON output
+dbt run-operation dbt_warehouse_profiler.profile_table --args '{schema: "your_schema", table: "your_table", output_format: "json"}'
 ```
 
 **Parameters:**
 - `schema` (required): Name of the schema
 - `table` (required): Name of the table
 - `database` (optional, Snowflake only): Name of the database. Defaults to target database.
+- `output_format` (optional): Output format - `"text"` (default) or `"json"`
 
 **Output:**
 - Row count
@@ -199,6 +266,20 @@ dbt run-operation dbt_warehouse_profiler.profile_table --args '{schema: "PUBLIC"
 - Preview of first 10 rows
 - Partitioning status (BigQuery)
 - Clustering status (BigQuery and Snowflake)
+
+**JSON Schema:**
+```json
+{
+  "schema": "prod_data",
+  "table": "users",
+  "row_count": 1234567,
+  "size_bytes": 56789012,
+  "last_modified": "2024-01-15 10:30:00+00:00",
+  "partitioned": true,
+  "clustered": false,
+  "preview": [{"id": "1", "name": "John", "email": "john@example.com"}]
+}
+```
 
 ---
 
@@ -213,12 +294,16 @@ dbt run-operation dbt_warehouse_profiler.profile_columns --args '{schema: "your_
 
 # Snowflake: Profile columns in a specific database
 dbt run-operation dbt_warehouse_profiler.profile_columns --args '{schema: "PUBLIC", table: "users", database: "RAW_DATA"}'
+
+# JSON output
+dbt run-operation dbt_warehouse_profiler.profile_columns --args '{schema: "your_schema", table: "your_table", output_format: "json"}'
 ```
 
 **Parameters:**
 - `schema` (required): Name of the schema
 - `table` (required): Name of the table
 - `database` (optional, Snowflake only): Name of the database. Defaults to target database.
+- `output_format` (optional): Output format - `"text"` (default) or `"json"`
 
 **Output:**
 For each column, the macro outputs statistics based on column type:
@@ -229,7 +314,7 @@ For each column, the macro outputs statistics based on column type:
 - **Boolean columns**: Null count/%, distinct count, true/false counts
 - **Complex types (ARRAY, STRUCT, JSON)**: Null count/% only
 
-**Example Output:**
+**Example Text Output:**
 ```
 === Column Profile for prod_data.users ===
 
@@ -255,6 +340,43 @@ Columns analyzed: 3
 Columns with nulls: 1
 ```
 
+**JSON Schema:**
+```json
+{
+  "schema": "prod_data",
+  "table": "users",
+  "total_rows": 1234567,
+  "columns": [
+    {
+      "name": "user_id",
+      "data_type": "INT64",
+      "is_nullable": false,
+      "null_count": 0,
+      "null_percentage": 0.0,
+      "distinct_count": 1234567,
+      "min": 1,
+      "max": 1234567,
+      "avg": 617284.0,
+      "type_category": "numeric"
+    },
+    {
+      "name": "email",
+      "data_type": "STRING",
+      "is_nullable": true,
+      "null_count": 1234,
+      "null_percentage": 0.1,
+      "distinct_count": 1233333,
+      "samples": ["user@example.com", "test@test.org"],
+      "type_category": "string"
+    }
+  ],
+  "summary": {
+    "columns_analyzed": 3,
+    "columns_with_nulls": 1
+  }
+}
+```
+
 ---
 
 ### 7. `validate_source`
@@ -268,18 +390,34 @@ dbt run-operation dbt_warehouse_profiler.validate_source --args '{schema: "your_
 
 # Snowflake: Validate a source in a specific database
 dbt run-operation dbt_warehouse_profiler.validate_source --args '{schema: "PUBLIC", table: "users", database: "RAW_DATA"}'
+
+# JSON output
+dbt run-operation dbt_warehouse_profiler.validate_source --args '{schema: "your_schema", table: "your_table", output_format: "json"}'
 ```
 
 **Parameters:**
 - `schema` (required): Name of the schema
 - `table` (required): Name of the table
 - `database` (optional, Snowflake only): Name of the database. Defaults to target database.
+- `output_format` (optional): Output format - `"text"` (default) or `"json"`
 
 **Output:**
 - Whether table is declared as a source
 - Source name if found
 - Whether documentation exists
 - Preview of description
+
+**JSON Schema:**
+```json
+{
+  "schema": "raw_data",
+  "table": "events",
+  "source_declared": true,
+  "source_name": "raw_events",
+  "has_documentation": true,
+  "description": "Raw event data from the application..."
+}
+```
 
 ---
 
@@ -294,15 +432,38 @@ dbt run-operation dbt_warehouse_profiler.validate_dataset_sources --args '{schem
 
 # Snowflake: Validate sources in a specific database
 dbt run-operation dbt_warehouse_profiler.validate_dataset_sources --args '{schema: "PUBLIC", database: "RAW_DATA"}'
+
+# JSON output
+dbt run-operation dbt_warehouse_profiler.validate_dataset_sources --args '{schema: "your_schema", output_format: "json"}'
 ```
 
 **Parameters:**
 - `schema` (required): Name of the schema to validate
 - `database` (optional, Snowflake only): Name of the database. Defaults to target database.
+- `output_format` (optional): Output format - `"text"` (default) or `"json"`
 
 **Output:**
 - List of all tables with their documentation status
 - Summary statistics showing percentage of documented sources
+
+**JSON Schema:**
+```json
+{
+  "schema": "raw_data",
+  "tables": [
+    {"name": "users", "source_declared": true, "source_name": "raw", "has_documentation": true, "status": "documented"},
+    {"name": "events", "source_declared": true, "source_name": "raw", "has_documentation": false, "status": "undocumented"},
+    {"name": "temp_data", "source_declared": false, "source_name": null, "has_documentation": false, "status": "not_declared"}
+  ],
+  "summary": {
+    "total_tables": 3,
+    "declared_sources": 2,
+    "declared_percentage": 66.7,
+    "documented_sources": 1,
+    "documented_percentage": 33.3
+  }
+}
+```
 
 ---
 
@@ -318,6 +479,9 @@ dbt run-operation dbt_warehouse_profiler.execute_raw_query --args '{query: "SELE
 # Execute an aggregation query
 dbt run-operation dbt_warehouse_profiler.execute_raw_query --args '{query: "SELECT status, COUNT(*) as count FROM orders GROUP BY status"}'
 
+# JSON output
+dbt run-operation dbt_warehouse_profiler.execute_raw_query --args '{query: "SELECT * FROM my_schema.my_table LIMIT 10", output_format: "json"}'
+
 # Execute a JOIN query (BigQuery)
 dbt run-operation dbt_warehouse_profiler.execute_raw_query --args '{query: "SELECT u.name, o.total FROM `project.dataset.users` u JOIN `project.dataset.orders` o ON u.id = o.user_id LIMIT 100"}'
 
@@ -327,11 +491,27 @@ dbt run-operation dbt_warehouse_profiler.execute_raw_query --args '{query: "SELE
 
 **Parameters:**
 - `query` (required): The SQL query to execute
+- `output_format` (optional): Output format - `"text"` (default) or `"json"`
 
 **Output:**
 - Number of rows and columns returned
 - Column headers
 - All result rows
+
+**JSON Schema:**
+```json
+{
+  "query": "SELECT * FROM users LIMIT 2",
+  "success": true,
+  "row_count": 2,
+  "column_count": 3,
+  "columns": ["id", "name", "email"],
+  "rows": [
+    {"id": "1", "name": "John", "email": "john@example.com"},
+    {"id": "2", "name": "Jane", "email": "jane@example.com"}
+  ]
+}
+```
 
 **Security Notes:**
 - Uses your existing dbt profile credentials
@@ -409,6 +589,19 @@ dbt run-operation dbt_warehouse_profiler.execute_raw_query --args '{query: "SELE
 
 # Snowflake: Join multiple tables
 dbt run-operation dbt_warehouse_profiler.execute_raw_query --args '{query: "SELECT c.customer_name, COUNT(o.order_id) as order_count, SUM(o.total) as total_spent FROM CUSTOMERS c LEFT JOIN ORDERS o ON c.id = o.customer_id GROUP BY c.customer_name ORDER BY total_spent DESC LIMIT 20"}'
+```
+
+### JSON Output for Automation
+
+```bash
+# Get table list as JSON for scripting
+dbt run-operation dbt_warehouse_profiler.list_tables --args '{schema: "prod_data", output_format: "json"}' 2>&1 | grep '^{' | jq .
+
+# Profile columns and parse with jq
+dbt run-operation dbt_warehouse_profiler.profile_columns --args '{schema: "prod_data", table: "users", output_format: "json"}' 2>&1 | grep '^{' | jq '.columns[] | select(.null_percentage > 10)'
+
+# Validate sources and check coverage
+dbt run-operation dbt_warehouse_profiler.validate_dataset_sources --args '{schema: "raw_data", output_format: "json"}' 2>&1 | grep '^{' | jq '.summary.documented_percentage'
 ```
 
 ## Contributing
