@@ -1,3 +1,10 @@
+## [1.4.2](https://github.com/blueprint-data/dbt-warehouse-profiler/compare/v1.4.1...v1.4.2) (2026-01-17)
+
+
+### Bug Fixes
+
+* **profiling:** remove unnecessary TRY_CAST in Snowflake AVG calculation ([124568f](https://github.com/blueprint-data/dbt-warehouse-profiler/commit/124568f25b68980dd3cc03b0c4973b7696d124a1))
+
 ## [1.4.1](https://github.com/blueprint-data/dbt-warehouse-profiler/compare/v1.4.0...v1.4.1) (2026-01-17)
 
 
