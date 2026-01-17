@@ -163,7 +163,7 @@
   {% set preview_results = run_query(preview_query) %}
 
   {% set preview_rows = [] %}
-  {% set column_names = preview_results.columns | list if preview_results else [] %}
+  {% set column_names = preview_results.column_names | list if preview_results else [] %}
   {% for row in preview_results %}
     {% set row_dict = {} %}
     {% for i in range(column_names | length) %}
@@ -565,8 +565,8 @@
   {# Display results #}
   {% if results %}
     {% set row_count = results.rows | length %}
-    {% set col_count = results.columns | length %}
-    {% set column_names = results.columns | list %}
+    {% set col_count = results.column_names | length %}
+    {% set column_names = results.column_names | list %}
 
     {% do result.update({'row_count': row_count, 'column_count': col_count, 'columns': column_names}) %}
 
