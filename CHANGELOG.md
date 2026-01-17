@@ -1,3 +1,10 @@
+## [1.4.3](https://github.com/blueprint-data/dbt-warehouse-profiler/compare/v1.4.2...v1.4.3) (2026-01-17)
+
+
+### Bug Fixes
+
+* **profiling:** add type conversions for statistics in Snowflake profiling ([b1ad7be](https://github.com/blueprint-data/dbt-warehouse-profiler/commit/b1ad7bef353b7d8dba9878ddb2d4c09c5e5462fb))
+
 ## [1.4.2](https://github.com/blueprint-data/dbt-warehouse-profiler/compare/v1.4.1...v1.4.2) (2026-01-17)
 
 
