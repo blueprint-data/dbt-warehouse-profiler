@@ -1,3 +1,10 @@
+## [1.4.6](https://github.com/blueprint-data/dbt-warehouse-profiler/compare/v1.4.5...v1.4.6) (2026-01-20)
+
+
+### Bug Fixes
+
+* better handle specific data types ([723a0f4](https://github.com/blueprint-data/dbt-warehouse-profiler/commit/723a0f4c24bac2e3dfb54865d0eb3da212edb420))
+
 ## [1.4.5](https://github.com/blueprint-data/dbt-warehouse-profiler/compare/v1.4.4...v1.4.5) (2026-01-20)
 
 
