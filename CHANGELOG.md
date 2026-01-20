@@ -1,3 +1,10 @@
+## [1.4.4](https://github.com/blueprint-data/dbt-warehouse-profiler/compare/v1.4.3...v1.4.4) (2026-01-20)
+
+
+### Bug Fixes
+
+* solve variant data types in snowflake ([563ac20](https://github.com/blueprint-data/dbt-warehouse-profiler/commit/563ac209843a222082983d8b93b862bc83690d66))
+
 ## [1.4.3](https://github.com/blueprint-data/dbt-warehouse-profiler/compare/v1.4.2...v1.4.3) (2026-01-17)
 
 
