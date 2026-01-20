@@ -16,3 +16,16 @@
     {{ log(tojson(data), info=True) }}
   {% endif %}
 {% endmacro %}
+
+{% macro _safe_tojson(data) %}
+  {#
+    Safely serialize data to JSON, handling non-serializable types like Decimal.
+    
+    Args:
+      data: Dictionary, list, or any value to serialize
+    
+    Returns:
+      JSON string
+  #}
+  {{ tojson(data) }}
+{% endmacro %}

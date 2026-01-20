@@ -159,8 +159,8 @@
 
   {% if metadata_results and metadata_results.rows | length > 0 %}
     {% do result.update({
-      'row_count': metadata_results[0][0],
-      'size_bytes': metadata_results[0][1],
+      'row_count': metadata_results[0][0] | int,
+      'size_bytes': metadata_results[0][1] | int,
       'created': metadata_results[0][2] | string if metadata_results[0][2] else none,
       'last_altered': metadata_results[0][3] | string if metadata_results[0][3] else none,
       'clustering_key': metadata_results[0][4] if metadata_results[0][4] else none
