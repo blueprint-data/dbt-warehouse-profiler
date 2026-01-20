@@ -1,3 +1,10 @@
+## [1.4.5](https://github.com/blueprint-data/dbt-warehouse-profiler/compare/v1.4.4...v1.4.5) (2026-01-20)
+
+
+### Bug Fixes
+
+* allow variant samples to be up to 10k long ([858a285](https://github.com/blueprint-data/dbt-warehouse-profiler/commit/858a285904aa7734255985c4c23b39530e7552e8))
+
 ## [1.4.4](https://github.com/blueprint-data/dbt-warehouse-profiler/compare/v1.4.3...v1.4.4) (2026-01-20)
 
 
