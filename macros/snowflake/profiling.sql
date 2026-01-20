@@ -304,18 +304,51 @@
     {# Build query based on column type #}
     {% if base_type in complex_types %}
 
-      {# Complex types - only null count #}
+      {# Complex types - null count, distinct count, and samples (cast to VARCHAR) #}
       {% set stats_query %}
         SELECT
-          COUNT_IF("{{ col_name }}" IS NULL) as null_count
+          COUNT_IF("{{ col_name }}" IS NULL) as null_count,
+          COUNT(DISTINCT "{{ col_name }}") as distinct_count
         FROM {{ full_table }}
       {% endset %}
 
       {% set stats = run_query(stats_query) %}
+
+      {# Get sample values by casting to VARCHAR #}
+      {% set sample_query %}
+        SELECT DISTINCT "{{ col_name }}"::VARCHAR as sample_val
+        FROM {{ full_table }}
+        WHERE "{{ col_name }}" IS NOT NULL
+        LIMIT {{ max_sample_values }}
+      {% endset %}
+
+      {% set samples = run_query(sample_query) %}
+
       {% if stats and stats.rows | length > 0 %}
         {% set null_count = stats[0][0] | int %}
+        {% set distinct_count = stats[0][1] | int %}
         {% set null_pct = (null_count / total_rows * 100) | round(2) %}
-        {% do col_result.update({'null_count': null_count, 'null_percentage': null_pct, 'type_category': 'complex'}) %}
+
+        {% set sample_list = [] %}
+        {% if samples and samples.rows | length > 0 %}
+          {% for sample in samples %}
+            {% if sample[0] is not none %}
+              {% set sample_str = sample[0] | string %}
+              {% if sample_str | length > 50 %}
+                {% set sample_str = sample_str[:47] + '...' %}
+              {% endif %}
+              {% do sample_list.append(sample_str) %}
+            {% endif %}
+          {% endfor %}
+        {% endif %}
+
+        {% do col_result.update({
+          'null_count': null_count,
+          'null_percentage': null_pct,
+          'distinct_count': distinct_count,
+          'samples': sample_list,
+          'type_category': 'complex'
+        }) %}
         {% if null_count > 0 %}
           {% set ns.columns_with_nulls = ns.columns_with_nulls + 1 %}
         {% endif %}
@@ -494,7 +527,14 @@
       {% endif %}
 
       {% if col_result.type_category == 'complex' %}
-        {{ log('  [Complex type - limited statistics]', info=True) }}
+        {{ log('  Distinct: ' + (col_result.distinct_count | string), info=True) }}
+        {% if col_result.samples | length > 0 %}
+          {% set quoted_samples = [] %}
+          {% for s in col_result.samples %}
+            {% do quoted_samples.append("'" + s + "'") %}
+          {% endfor %}
+          {{ log('  Samples (as VARCHAR): [' + quoted_samples | join(', ') + ']', info=True) }}
+        {% endif %}
       {% elif col_result.type_category == 'boolean' %}
         {{ log('  Distinct: ' + (col_result.distinct_count | string), info=True) }}
         {{ log('  True: ' + (col_result.true_count | string) + ' (' + (col_result.true_percentage | string) + '%) | False: ' + (col_result.false_count | string) + ' (' + (col_result.false_percentage | string) + '%)', info=True) }}
