@@ -334,8 +334,8 @@
           {% for sample in samples %}
             {% if sample[0] is not none %}
               {% set sample_str = sample[0] | string %}
-              {% if sample_str | length > 50 %}
-                {% set sample_str = sample_str[:47] + '...' %}
+              {% if sample_str | length > 1000 %}
+                {% set sample_str = sample_str[:997] + '...' %}
               {% endif %}
               {% do sample_list.append(sample_str) %}
             {% endif %}
@@ -493,8 +493,8 @@
           {% for sample in samples %}
             {% if sample[0] is not none %}
               {% set sample_str = sample[0] | string %}
-              {% if sample_str | length > 50 %}
-                {% set sample_str = sample_str[:47] + '...' %}
+              {% if sample_str | length > 1000 %}
+                {% set sample_str = sample_str[:997] + '...' %}
               {% endif %}
               {% do sample_list.append(sample_str) %}
             {% endif %}
